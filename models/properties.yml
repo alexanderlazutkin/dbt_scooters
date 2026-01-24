@@ -36,6 +36,9 @@ models:
 
   - name: "trips_age_daily"
     description: "Daily trips statistics by user age"
+  
+  - name: "trips_age_group"
+    description: "Overall trips statistics by user age group"
 
   - name: "trips_age_daily_stat"
     description: "Aggregation of daily trips statistics by user age"
@@ -73,3 +76,9 @@ models:
     description: "Scooter satistics by company"
   - name: "companies_trips"
     description: "Trip satistics by company"
+  - name: "events_full"
+    description: "User events enriched with meaningful types"
+    config:
+      materialized: "view"
+  - name: "events_stat"
+    description: "Overall user events statistics"
