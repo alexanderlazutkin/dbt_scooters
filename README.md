@@ -50,3 +50,9 @@ create extension postgis schema public;
 - `dbt docs serve` - запускает локальный сервер для просмотра документации
 
 Примечание: если виртуальное окружение не активно, используйте `uv run dbt `.
+
+
+## Полезные макросы
+
+- `dbt run-operation create_role --args "name: finance"` - создание роли в базе (на примере роли "finance")
+- `dbt run-operation create_postgis` - активация расширения PostGIS для расчета географических моделей
