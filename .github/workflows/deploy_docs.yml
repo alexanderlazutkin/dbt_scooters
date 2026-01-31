@@ -23,9 +23,9 @@ jobs:
         run: uv sync --locked
 
       - name: Prepare connection profile
-        run: cp profiles.cicd.yml profiles.yml
+        run: cp profiles.example.yml profiles.yml
 
-      - name: Generate dbt docs
+      - name: Generate docs
         run: uv run dbt docs generate
         env:
           DBT_ENV_SECRET_PASSWORD: ${{ secrets.DBT_ENV_SECRET_PASSWORD }}
