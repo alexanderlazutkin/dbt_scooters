@@ -7,10 +7,39 @@ sources:
     tables:
       - name: "trips"
         description: "Scooter trips"
-
+        loaded_at_field: "finished_at"
+        freshness:
+          warn_after:
+            count: 1
+            period: "day"
+          error_after:
+            count: 3650
+            period: "day"
+          filter: (now()::date - finished_at::date) < 883
+        columns:
+          - name: "user_id"
+            description: "User identifier"
+            data_tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    name: "every_trip_has_user"
+                    to: "source('scooters_raw', 'users')"
+                    field: "id"
       - name: "users"
         description: "Users of scooter service"
-
+        columns:
+          - name: "sex"
+            description: "User gender"
+            data_tests:
+              - accepted_values:
+                  arguments:
+                    values: [ "M", "F" ]
+              - not_null:
+                  config:
+                    severity: "warn"
+                    store_failures: true
+                    schema: "data_test"
       - name: "events"
         description: "Raw user events with duplicates"
 
@@ -40,7 +69,11 @@ models:
 
   - name: "trips_age_daily"
     description: "Daily trips statistics by user age"
-  
+    data_tests:
+      - unique_key:
+          arguments:
+            columns: [ "date", "age" ]
+
   - name: "trips_age_group"
     description: "Overall trips statistics by user age group"
 
@@ -73,6 +106,12 @@ models:
     description: "Scooter satistics by company"
   - name: "companies_trips"
     description: "Trip satistics by company"
+    columns:
+      - name: "company"
+        description: "Scooters manufacturing company"
+        data_tests:
+          - unique
+
   - name: "events_full"
     description: "User events enriched with meaningful types"
     config:
