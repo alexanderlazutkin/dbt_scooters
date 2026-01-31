@@ -1,0 +1,12 @@
+dbt_scooters:
+  outputs:
+    dev:
+      dbname: db1_b9cp
+      host: dpg-d5gboefpm1nc73e36ij0-a.frankfurt-postgres.render.com
+      pass: "{{ env_var('DBT_ENV_SECRET_PASSWORD') }}"
+      port: 5432
+      schema: dbt
+      threads: 4
+      type: postgres
+      user: test
+  target: dev
