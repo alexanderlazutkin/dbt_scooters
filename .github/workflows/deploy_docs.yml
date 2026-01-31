@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked
 
+      - name: Install dependencies
+        run: uv dbt deps
+
       - name: Prepare connection profile
         run: cp profiles.cicd.yml profiles.yml
 
