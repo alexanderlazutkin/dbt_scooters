@@ -23,7 +23,7 @@ jobs:
         run: uv sync --locked
 
       - name: Prepare connection profile
-        run: cp profiles.example.yml profiles.yml
+        run: cp profiles.cicd.yml profiles.yml
 
       - name: Generate docs
         run: uv run dbt docs generate
