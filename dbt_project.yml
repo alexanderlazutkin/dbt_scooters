@@ -8,11 +8,14 @@ test-paths: ["tests"]
 seed-paths: ["seeds"]
 macro-paths: ["macros"]
 snapshot-paths: ["snapshots"]
-
+# Описывает директории/ресурсы, которые dbt удаляет при выполнении команды dbt clean. Обычно удаляются папки с результатами сборки (target) и зависимостями пакетов (dbt_packages).
 clean-targets:
   - "target"
   - "dbt_packages"
-
+# Задает пользовательскую переменную dbt_date:time_zone со значением "Europe/Moscow". Переменные доступны в шаблонах Jinja внутри моделей/macros как var('dbt_date:time_zone').
+vars:
+  "dbt_date:time_zone": "Europe/Moscow"
+# Список SQL-команд, которые dbt выполнит в конце запуска (on-run-end hook). Здесь выполняется GRANT USAGE на схему dbt_finance для роли/пользователя finance.
 on-run-end:
     - "grant usage on schema dbt_finance to finance;"
 

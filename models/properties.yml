@@ -48,6 +48,10 @@ models:
     description: "Trips prepared for analysis"
     config:
       materialized: "view"
+    data_tests:
+      - row_count_equal:
+          arguments:
+            compare_model: "source('scooters_raw', 'trips')"
 
   - name: "trips_users"
     description: "Prepared trips enriched with users data"
@@ -122,6 +126,16 @@ models:
           days_max: 60
     data_tests: [ "unique_key_meta" ]
   
+  - name: "events_stream"
+    description: "User events prepared for product analysis"
+    config:
+      materialized: "ephemeral"
+  - name: "book_scooter_retention"
+    description: >
+      Retention analysis which tells how many people
+      started search for scooter and finally booked it on or after
+      1, 7, 14 days (or weeks, months, years), etc
+
   - name: "events_stat"
     description: "Overall user events statistics"
   
@@ -149,12 +163,77 @@ models:
           days_max: 60
 
   - name: "sex_age_pivot"
-    description: "Trips per age pivoted by sex"
+    description: "Trips per age grouped by sex"
     data_tests:
       - unique_key:
-          columns: [ "age" ]
+          arguments:
+            columns: [ "age" ]
+      - dbt_expectations.expect_table_column_count_to_equal:
+          arguments:
+            value: 3
     columns:
       - name: "age"
         description: "Numerical age of user"
         data_tests:
           - "dbt_utils.not_constant"
+
+  - name: time_spine_daily
+    config:
+      materialized: "table"
+    time_spine:
+      standard_granularity_column: date_day
+    columns:
+      - name: date_day
+        granularity: day
+
+  - name: "users_prep"
+    description: "Users prepared for analysis without sensitive data"
+    config:
+      materialized: "view"
+
+  - name: "users_class_weekly_trips"
+    description: "User classification based on trips during the week"
+    data_tests:
+      - unique_key:
+          arguments:
+            columns: [ "user_id" ]
+    columns:
+      - name: "regular"
+        description: "Regular user, rides at least 3 days a week"
+      - name: "fan"
+        description: "Enthusiast, uses the service on average at least 6 days a week"
+
+  - name: "users_class_weekly_destination_trips"
+    description: "User classification based on trips during the week considering the destination"
+    data_tests:
+      - unique_key:
+          arguments:
+            columns: [ "user_id" ]
+    columns:
+      - name: "to_work"
+        description: "Travels to the same place (to work) in the morning at least three times a week"
+
+  - name: "users_class_monthly_trips"
+    description: "User classification based on the number of trips per month"
+    data_tests:
+      - unique_key:
+          arguments:
+            columns: [ "user_id" ]
+    columns:
+      - name: "rare"
+        description: "infrequent/occasional trips, no more than 2 trips per month"
+
+  - name: "users_class"
+    description: >
+      Combining all features into a consolidated table.
+      Joining with the users table to label each user
+    data_tests:
+      - unique_key:
+          arguments:
+            columns: [ "user_id" ]
+
+  - name: "users_class_stat"
+    description: >
+      Calculation of overall group statistics:
+        - number of users in each group
+        - total number of users for information and validation
