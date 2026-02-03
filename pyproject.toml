@@ -7,3 +7,8 @@ dependencies = [
     "dbt-core==1.10.19",
     "dbt-postgres==1.9.1"
 ]
+
+[dependency-groups]
+dev = [
+    "sqlfluff-templater-dbt==4.0.0",
+]
