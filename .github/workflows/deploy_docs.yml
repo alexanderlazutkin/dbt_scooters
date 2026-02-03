@@ -27,7 +27,7 @@ jobs:
       - name: Prepare connection profile
         run: cp profiles.cicd.yml profiles.yml
 
-      - name: Run linter
+      - name: Run linter sqlfluff
         run: uv run sqlfluff lint
         env:
           DBT_ENV_SECRET_PASSWORD: ${{ secrets.DBT_ENV_SECRET_PASSWORD }}
