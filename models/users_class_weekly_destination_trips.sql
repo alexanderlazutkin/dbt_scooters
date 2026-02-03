@@ -1,8 +1,6 @@
 with
 daily_stat_cte as (
-    /* For each user, we find the trip statistics to each destination
-    for each day:
-      morning_trips - the number of morning trips */
+    /* For each user, we find the trip statistics to each destination for each day: morning_trips - the number of morning trips */
     select
         user_id,
         st_snaptogrid(
@@ -23,9 +21,7 @@ daily_stat_cte as (
 ),
 
 weekly_stat_cte as (
-    /* For each user, we find the trip statistics to each destination
-    for each week:
-      morning_trip_days - the number of days with morning trips */
+    /* For each user, we find the trip statistics to each destination for each week:morning_trip_days - the number of days with morning trips */
     select
         user_id,
         destination,
