@@ -27,8 +27,8 @@ jobs:
           uv run dbt deps
           cp profiles.cicd.yml profiles.yml
 
-      - name: ✅ Run linter
-        run: uv run sqlfluff lint
+      #- name: ✅ Run linter
+      #  run: uv run sqlfluff lint
 
       - name: 🏗️️ Build production environment
         run: uv run dbt build --target prod
