@@ -27,9 +27,6 @@ jobs:
           uv run dbt deps
           cp profiles.cicd.yml profiles.yml
 
-      #- name: Run linter sqlfluff
-      #  run: uv run sqlfluff lint
-
       - name: ✅ Run linter
         run: uv run sqlfluff lint
 
